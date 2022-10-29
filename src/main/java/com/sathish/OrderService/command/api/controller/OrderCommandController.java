@@ -4,6 +4,7 @@ package com.sathish.OrderService.command.api.controller;
 import com.sathish.OrderService.command.api.command.CreateOrderCommand;
 import com.sathish.OrderService.command.api.model.OrderRestModel;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ public class OrderCommandController {
         this.commandGateway = commandGateway;
     }
 
+    @PostMapping
     public String createOrder(@RequestBody OrderRestModel orderRestModel) {
         String orderId = UUID.randomUUID().toString();
 
@@ -31,7 +33,7 @@ public class OrderCommandController {
                 .address(orderRestModel.getAddress())
                 .build();
 
-
+        commandGateway.sendAndWait(createOrderCommand);
         return "Order Created";
     }
 
